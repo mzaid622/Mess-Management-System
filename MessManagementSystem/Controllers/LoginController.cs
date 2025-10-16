@@ -4,7 +4,7 @@ namespace Mess_Management_System.Controllers
 {
     public class LoginController : Controller
     {
-        public IActionResult Login_page()
+        public IActionResult Login_Page()
         {
             return View();
         }
