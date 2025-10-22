@@ -8,5 +8,25 @@ namespace Mess_Management_System.Controllers
         {
             return View();
         }
+
+        [Route("/Home")]
+        public IActionResult Home()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Login_Page(string username, string password)
+        {
+            // Check if credentials are correct
+            if (username == "admin" && password == "12345")
+            {
+                // Redirect to Home if login successful
+                return Redirect("/Home");
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
     }
 }
