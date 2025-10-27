@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewBag.Title = "Register";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,21 +30,29 @@
         <div class="w-1/2 bg-white flex flex-col justify-center px-10 py-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Create Account</h2>
 
-            <form action="#" method="POST" class="space-y-5">
+            <form asp-action="Register_Page" asp-controller="Register" method="POST" class="space-y-5">
+                <!-- Full Name -->
                 <div>
-                    <input type="text" name="fullname" placeholder="Full Name"
+                    <input type="text" name="FullName" placeholder="Full Name" required
                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
+
+
+                <!-- Email -->
                 <div>
-                    <input type="email" name="email" placeholder="Email"
+                    <input type="email" name="Email" placeholder="Email" required
                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
+
+                <!-- Password -->
                 <div>
-                    <input type="password" name="password" placeholder="Password"
+                    <input type="password" name="Password" placeholder="Password" required
                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
+
+                <!-- Confirm Password -->
                 <div>
-                    <input type="password" name="confirm_password" placeholder="Confirm Password"
+                    <input type="password" name="ConfirmPassword" placeholder="Confirm Password" required
                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
 
@@ -52,7 +63,7 @@
 
                 <p class="text-center text-gray-600 text-sm mt-4">
                     Already have an account?
-                    <a href="@Url.Action("Login", "Register_page")" class="text-purple-600 hover:underline">
+                    <a href="@Url.Action("Login_Page", "Login")" class="text-purple-600 hover:underline">
                         Sign In
                     </a>
                 </p>
