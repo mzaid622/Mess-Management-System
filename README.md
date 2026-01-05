@@ -499,7 +499,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```
 MIT License
 
-Copyright (c) 2024 Your Name
+Copyright (c) 2024 Muhammad Zaid
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -525,9 +525,9 @@ SOFTWARE.
 ## 📞 Contact
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- GitHub: [[@yourusername](https://github.com/yourusername)](https://github.com/mzaid622)
+- Email: M.Zaid990447@gmail.com
+- LinkedIn: [[Your LinkedIn](https://linkedin.com/in/yourprofile)](https://www.linkedin.com/in/zaid-mughal-a34785359/)
 
 **Project Link:** [https://github.com/yourusername/mess-management-system](https://github.com/yourusername/mess-management-system)
 
@@ -547,6 +547,6 @@ SOFTWARE.
 
 **⭐ Star this repo if you find it helpful! ⭐**
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by [Muhammad Zaid]
 
 </div>
