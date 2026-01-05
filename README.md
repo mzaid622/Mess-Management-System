@@ -1,5 +1,7 @@
 # 🍽️ Mess Management System
 
+<a href="[url](https://zaid622-001-site1.ktempurl.com)">Link for Project</a>
+
 <div align="center">
 
 ![Mess Management System](https://img.shields.io/badge/Mess-Management-purple?style=for-the-badge)
@@ -398,28 +400,6 @@ Login → Home → View Today's Menu & Attendance
 
 ---
 
-## 📸 Screenshots
-
-### Admin Dashboard
-![Admin Dashboard](https://via.placeholder.com/800x450/7C3AED/FFFFFF?text=Admin+Dashboard)
-
-### Menu Management
-![Menu Management](https://via.placeholder.com/800x450/EC4899/FFFFFF?text=Menu+Management)
-
-### Attendance Tracking
-![Attendance](https://via.placeholder.com/800x450/10B981/FFFFFF?text=Attendance+Tracking)
-
-### User Dashboard
-![User Dashboard](https://via.placeholder.com/800x450/3B82F6/FFFFFF?text=User+Dashboard)
-
-### Stripe Payment
-![Stripe Payment](https://via.placeholder.com/800x450/6366F1/FFFFFF?text=Stripe+Payment)
-
-### Bill History
-![Bill History](https://via.placeholder.com/800x450/8B5CF6/FFFFFF?text=Bill+History)
-
----
-
 ## 🧪 Testing
 
 ### Test Cards (Stripe)
@@ -525,9 +505,9 @@ SOFTWARE.
 ## 📞 Contact
 
 **Your Name**
-- GitHub: [[@yourusername](https://github.com/yourusername)](https://github.com/mzaid622)
+- GitHub: (https://github.com/yourusername)](https://github.com/mzaid622)
 - Email: M.Zaid990447@gmail.com
-- LinkedIn: [[Your LinkedIn](https://linkedin.com/in/yourprofile)](https://www.linkedin.com/in/zaid-mughal-a34785359/)
+- LinkedIn: (https://www.linkedin.com/in/zaid-mughal-a34785359/)
 
 **Project Link:** [https://github.com/yourusername/mess-management-system](https://github.com/yourusername/mess-management-system)
 
