@@ -1,0 +1,294 @@
+﻿@model Menu
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Add Menu Item</title>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen p-10">
+
+    <div class="max-w-2xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-purple-700 mb-2">Add New Menu Item</h1>
+            <p class="text-gray-600">Create a new menu item for your mess</p>
+        </div>
+
+        <!-- ✅ Display Error Messages -->
+        @if (ViewBag.Error != null)
+        {
+            <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center animate-shake">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span>@ViewBag.Error</span>
+            </div>
+        }
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+
+            <form id="menuForm" method="post" asp-action="Add" class="space-y-6">
+
+                <!-- Item Name -->
+                <div>
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Item Name <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                            </svg>
+                        </div>
+                        <input type="text" id="name" name="Name" placeholder="e.g., Chicken Biryani, Tea, Coffee"
+                               class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    </div>
+                    <span id="nameError" class="text-red-500 text-sm mt-1 hidden"></span>
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Price (Rs) <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="number" id="price" name="Price" placeholder="0.00" step="0.01" min="0"
+                               class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    </div>
+                    <span id="priceError" class="text-red-500 text-sm mt-1 hidden"></span>
+                </div>
+
+                <!-- Date -->
+                <div>
+                    <label for="date" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Date <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="date" id="date" name="Date"
+                               class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    </div>
+                    <span id="dateError" class="text-red-500 text-sm mt-1 hidden"></span>
+                </div>
+
+                <!-- Item Type -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        Item Type <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="IsFood" value="true" checked
+                                   class="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500">
+                            <span class="text-gray-700">🍽️ Food (Optional - Billed if attended)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="IsFood" value="false"
+                                   class="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500">
+                            <span class="text-gray-700">☕ Drink (Mandatory - Always billed)</span>
+                        </label>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        💡 <strong>Food:</strong> Only billed if user attends | <strong>Drink:</strong> Automatically billed daily
+                    </p>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex space-x-4 pt-4">
+                    <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        Add Menu Item
+                    </button>
+
+                    <a href="/AdminMenu/Index"
+                       class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                        </svg>
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="mt-6 text-center">
+            <a href="/Admin/Dashboard" class="text-purple-600 hover:underline flex items-center justify-center">
+                <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ✅ jQuery Client-Side Validation -->
+    <script>
+        $(document).ready(function() {
+            // Set minimum date to today
+            var today = new Date().toISOString().split('T')[0];
+            $('#date').attr('min', today);
+            $('#date').val(today); // Default to today
+
+            // Hide error function
+            function hideError(field) {
+                $('#' + field + 'Error').addClass('hidden');
+                $('#' + field).removeClass('border-red-500');
+            }
+
+            // Show error function
+            function showError(field, message) {
+                $('#' + field + 'Error').text(message).removeClass('hidden');
+                $('#' + field).addClass('border-red-500');
+            }
+
+            // Name validation
+            $('#name').on('blur', function() {
+                var value = $(this).val().trim();
+                if (value === '') {
+                    showError('name', 'Item name is required');
+                } else if (value.length < 3) {
+                    showError('name', 'Item name must be at least 3 characters');
+                } else {
+                    hideError('name');
+                }
+            });
+
+            // Price validation
+            $('#price').on('blur', function() {
+                var value = parseFloat($(this).val());
+                if (isNaN(value) || value === '') {
+                    showError('price', 'Price is required');
+                } else if (value <= 0) {
+                    showError('price', 'Price must be greater than 0');
+                } else if (value > 10000) {
+                    showError('price', 'Price seems too high. Please verify.');
+                } else {
+                    hideError('price');
+                }
+            });
+
+            // Date validation
+            $('#date').on('blur', function() {
+                var value = $(this).val();
+                var selectedDate = new Date(value);
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (value === '') {
+                    showError('date', 'Date is required');
+                } else if (selectedDate < today) {
+                    showError('date', 'Date cannot be in the past');
+                } else {
+                    hideError('date');
+                }
+            });
+
+            // Clear errors on focus
+            $('#name, #price, #date').on('focus', function() {
+                var fieldId = $(this).attr('id');
+                hideError(fieldId);
+            });
+
+            // Form submission validation
+            $('#menuForm').on('submit', function(e) {
+                var isValid = true;
+
+                // Validate Name
+                var name = $('#name').val().trim();
+                if (name === '') {
+                    showError('name', 'Item name is required');
+                    isValid = false;
+                } else if (name.length < 3) {
+                    showError('name', 'Item name must be at least 3 characters');
+                    isValid = false;
+                } else {
+                    hideError('name');
+                }
+
+                // Validate Price
+                var price = parseFloat($('#price').val());
+                if (isNaN(price) || $('#price').val() === '') {
+                    showError('price', 'Price is required');
+                    isValid = false;
+                } else if (price <= 0) {
+                    showError('price', 'Price must be greater than 0');
+                    isValid = false;
+                } else if (price > 10000) {
+                    showError('price', 'Price seems too high. Please verify.');
+                    isValid = false;
+                } else {
+                    hideError('price');
+                }
+
+                // Validate Date
+                var dateValue = $('#date').val();
+                var selectedDate = new Date(dateValue);
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (dateValue === '') {
+                    showError('date', 'Date is required');
+                    isValid = false;
+                } else if (selectedDate < today) {
+                    showError('date', 'Date cannot be in the past');
+                    isValid = false;
+                } else {
+                    hideError('date');
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    $('html, body').animate({
+                        scrollTop: $('.border-red-500').first().offset().top - 100
+                    }, 300);
+                }
+            });
+        });
+    </script>
+
+    <!-- Custom CSS for animations -->
+    <style>
+        @@keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
+        }
+
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+﻿@model List<Bill>
+
+@{
+    ViewBag.Title = "My Bill History";
+    var billsByYear = ViewBag.BillsByYear as Dictionary<int, List<Bill>>;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>My Bill History</title>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen p-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-purple-700 mb-2">My Bill History</h1>
+            <p class="text-gray-600">View and manage all your billing records</p>
+        </div>
+
+        <!-- ✅ Display Messages -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span>@TempData["ErrorMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["InfoMessage"] != null)
+        {
+            <div class="mb-6 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                <span>@TempData["InfoMessage"]</span>
+            </div>
+        }
+
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Bills</p>
+                        <p class="text-2xl font-bold text-gray-800">@ViewBag.TotalBills</p>
+                        <p class="text-xs text-gray-500">Paid: @ViewBag.PaidBills | Unpaid: @ViewBag.UnpaidBills</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Paid Amount</p>
+                        <p class="text-2xl font-bold text-green-600">Rs @ViewBag.PaidAmount.ToString("N2")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Unpaid Amount</p>
+                        <p class="text-2xl font-bold text-red-600">Rs @ViewBag.UnpaidAmount.ToString("N2")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap gap-3 mb-6">
+            <a href="@Url.Action("Index")"
+               class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                All Bills
+            </a>
+            <a href="@Url.Action("FilterByStatus", new { status = "paid" })"
+               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                Paid Only
+            </a>
+            <a href="@Url.Action("FilterByStatus", new { status = "unpaid" })"
+               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                Unpaid Only
+            </a>
+            <a href="@Url.Action("Monthly")"
+               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                Monthly View
+            </a>
+        </div>
+
+        <!-- Bills Table -->
+        @if (Model.Count == 0)
+        {
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-6 py-8 rounded-2xl flex flex-col items-center justify-center">
+                <svg class="w-16 h-16 mb-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                </svg>
+                <p class="font-semibold text-lg mb-2">No bills found</p>
+                <p class="text-sm">Your billing records will appear here once generated by admin</p>
+            </div>
+        }
+        else
+        {
+            <!-- Bills grouped by year -->
+            @if (billsByYear != null)
+            {
+                @foreach (var yearGroup in billsByYear)
+                {
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-purple-700 mb-4">@yearGroup.Key</h3>
+
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead class="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                                        <tr>
+                                            <th class="px-6 py-4 text-left font-semibold">Date</th>
+                                            <th class="px-6 py-4 text-left font-semibold">Month</th>
+                                            <th class="px-6 py-4 text-right font-semibold">Amount</th>
+                                            <th class="px-6 py-4 text-center font-semibold">Status</th>
+                                            <th class="px-6 py-4 text-center font-semibold">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var bill in yearGroup.Value)
+                                        {
+                                            <tr class="border-b hover:bg-purple-50 transition">
+                                                <td class="px-6 py-4 text-gray-600">
+                                                    @bill.Date.ToString("MMM dd, yyyy")
+                                                </td>
+                                                <td class="px-6 py-4 text-gray-800 font-medium">
+                                                    @bill.Date.ToString("MMMM")
+                                                </td>
+                                                <td class="px-6 py-4 text-right font-semibold text-gray-800">
+                                                    Rs @bill.Amount.ToString("N2")
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    @if (bill.Paid)
+                                                    {
+                                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                                            ✓ Paid
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                                            ✗ Unpaid
+                                                        </span>
+                                                    }
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="flex justify-center space-x-2">
+                                                        <a href="@Url.Action("Details", new { id = bill.Id })"
+                                                           class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition text-sm flex items-center">
+                                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                            </svg>
+                                                            View
+                                                        </a>
+                                                        @if (!bill.Paid)
+                                                        {
+                                                            <form method="post" asp-controller="Payment" asp-action="CreateCheckoutSession" asp-route-billId="@bill.Id" class="inline">
+                                                                <button type="submit"
+                                                                        class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition text-sm flex items-center">
+                                                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                                                                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" />
+                                                                    </svg>
+                                                                    Pay Now
+                                                                </button>
+                                                            </form>
+                                                        }
+                                                        <a href="@Url.Action("DownloadInvoice", new { id = bill.Id })"
+                                                           class="bg-purple-500 text-white px-3 py-1 rounded-lg hover:bg-purple-600 transition text-sm flex items-center">
+                                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                            </svg>
+                                                            PDF
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+
+        <!-- Back Button -->
+        <div class="mt-8 text-center">
+            <a href="@Url.Action("Home", "UserMenu")"
+               class="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back to Home
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+﻿@model User
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Edit User</title>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen p-10">
+
+    <div class="max-w-2xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-purple-700 mb-2">Edit User</h1>
+            <p class="text-gray-600">Update user details and preferences</p>
+        </div>
+
+        <!-- ✅ Display Error Messages -->
+        @if (ViewBag.Error != null)
+        {
+            <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center animate-shake">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <span>@ViewBag.Error</span>
+            </div>
+        }
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            
+            <form id="editUserForm" method="post" asp-action="Edit" class="space-y-6">
+
+                <!-- Hidden ID -->
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <input type="hidden" name="PasswordHash" value="@Model.PasswordHash" />
+
+                <!-- Full Name -->
+                <div>
+                    <label for="fullName" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Full Name <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="fullName" name="FullName" value="@Model.FullName" placeholder="Enter full name"
+                               class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    </div>
+                    <span id="fullNameError" class="text-red-500 text-sm mt-1 hidden"></span>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Email Address <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                            </svg>
+                        </div>
+                        <input type="email" id="email" name="Email" value="@Model.Email" placeholder="Enter email address"
+                               class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    </div>
+                    <span id="emailError" class="text-red-500 text-sm mt-1 hidden"></span>
+                </div>
+
+                <!-- New Password (Optional) -->
+                <div>
+                    <label for="newPassword" class="block text-sm font-semibold text-gray-700 mb-2">
+                        New Password <span class="text-gray-400 text-xs">(Leave blank to keep current)</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <input type="password" id="newPassword" name="NewPassword" placeholder="Enter new password (min 6 characters)"
+                               class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    </div>
+                    <span id="newPasswordError" class="text-red-500 text-sm mt-1 hidden"></span>
+                </div>
+
+                <!-- Role Selection -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        User Role <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="Role" value="Admin" @(Model.Role.ToLower() == "admin" ? "checked" : "")
+                                   class="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500">
+                            <span class="text-gray-700">👑 Admin</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="Role" value="User" @(Model.Role.ToLower() == "user" ? "checked" : "")
+                                   class="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500">
+                            <span class="text-gray-700">👤 User</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        Meal Preferences
+                    </label>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 cursor-pointer p-3 border border-gray-200 rounded-lg hover:bg-purple-50 transition">
+                            <input type="checkbox" name="Drink" @(Model.Drink ? "checked" : "")
+                                   class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                            <div>
+                                <span class="text-gray-700 font-medium">☕ Drink</span>
+                                <p class="text-xs text-gray-500">Mandatory - Always billed daily</p>
+                            </div>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-3 border border-gray-200 rounded-lg hover:bg-purple-50 transition">
+                            <input type="checkbox" name="Lunch" @(Model.Lunch ? "checked" : "")
+                                   class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                            <div>
+                                <span class="text-gray-700 font-medium">🍽️ Lunch</span>
+                                <p class="text-xs text-gray-500">Optional - Billed if attended</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex space-x-4 pt-4">
+                    <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z"/>
+                        </svg>
+                        Update User
+                    </button>
+                    
+                    <a href="/AdminUser/Index"
+                       class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- Back to User List -->
+        <div class="mt-6 text-center">
+            <a href="/AdminUser/Index" class="text-purple-600 hover:underline flex items-center justify-center">
+                <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+                Back to User List
+            </a>
+        </div>
+
+    </div>
+
+   
+
+    <style>
+        @@keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+    <script src="~/js/editUserValidation.js"></script>
+
+</body>
+</html>

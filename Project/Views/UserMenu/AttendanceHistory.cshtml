@@ -1,0 +1,174 @@
+﻿@model List<Attendance>
+
+@{
+    ViewBag.Title = "My Attendance History";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <title>Attendance History</title>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen p-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-purple-700 mb-2">My Attendance History</h1>
+            <p class="text-gray-600">View all your attendance records marked by admin</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Days</p>
+                        <p class="text-2xl font-bold text-gray-800">@ViewBag.TotalDays</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                        <span class="text-2xl">🍽️</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Food Days</p>
+                        <p class="text-2xl font-bold text-gray-800">@ViewBag.FoodDays</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                        <span class="text-2xl">☕</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Drink Days</p>
+                        <p class="text-2xl font-bold text-gray-800">@ViewBag.DrinkDays</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">This Month</p>
+                        <p class="text-2xl font-bold text-gray-800">@ViewBag.ThisMonthDays</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Attendance Table -->
+        @if (Model.Count == 0)
+        {
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-6 py-8 rounded-2xl flex flex-col items-center justify-center">
+                <svg class="w-16 h-16 mb-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <p class="font-semibold text-lg mb-2">No attendance records found</p>
+                <p class="text-sm">Your attendance will appear here once marked by admin</p>
+            </div>
+        }
+        else
+        {
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                            <tr>
+                                <th class="px-6 py-4 text-left font-semibold">Date</th>
+                                <th class="px-6 py-4 text-left font-semibold">Menu Item</th>
+                                <th class="px-6 py-4 text-center font-semibold">Type</th>
+                                <th class="px-6 py-4 text-right font-semibold">Price</th>
+                                <th class="px-6 py-4 text-center font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var attendance in Model)
+                            {
+                                <tr class="border-b hover:bg-purple-50 transition">
+                                    <td class="px-6 py-4 text-gray-600">
+                                        @attendance.Menu.Date.ToString("MMM dd, yyyy")
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg flex items-center justify-center text-white mr-3">
+                                                @if (attendance.Menu.IsFood)
+                                                {
+                                                    <span>🍽️</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>☕</span>
+                                                }
+                                            </div>
+                                            <span class="font-medium text-gray-800">@attendance.Menu.Name</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        @if (attendance.Menu.IsFood)
+                                        {
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                                🍽️ Food
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                                ☕ Drink
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4 text-right font-semibold text-gray-800">
+                                        Rs @attendance.Menu.Price.ToString("N2")
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            Attended
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <!-- Back Button -->
+        <div class="mt-8 text-center">
+            <a href="@Url.Action("Home", "UserMenu")"
+               class="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back to Home
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

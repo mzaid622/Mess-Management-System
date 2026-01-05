@@ -1,0 +1,319 @@
+﻿@model List<Menu>
+
+@{
+    ViewBag.Title = "User Home";
+    var attended = ViewBag.UserAttendance as List<int>;
+    var recentBills = ViewBag.RecentBills as List<Bill>;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <title>User Home</title>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 min-h-screen p-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-3">
+                Welcome, @ViewBag.Username!
+            </h1>
+            <p class="text-gray-600 text-lg">View today's menu and your billing information</p>
+        </div>
+
+        <!-- ✅ Display Welcome Message -->
+        @if (ViewBag.WelcomeMessage != null)
+        {
+            <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center animate-fade-in">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>@ViewBag.WelcomeMessage</span>
+            </div>
+        }
+
+        <!-- Today's Menu Section -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-3xl font-bold text-purple-700">Today's Menu</h2>
+                <span class="text-gray-500 text-sm">@DateTime.Now.ToString("MMMM dd, yyyy")</span>
+            </div>
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-6 py-8 rounded-2xl flex flex-col items-center justify-center">
+                    <svg class="w-16 h-16 mb-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                    </svg>
+                    <p class="font-semibold text-lg mb-2">No menu available for today</p>
+                    <p class="text-sm">Please check back later or contact admin</p>
+                </div>
+            }
+            else
+            {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach (var item in Model)
+                    {
+                        var isAttended = attended != null && attended.Contains(item.Id);
+                        <div class="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-200 @(isAttended ? "border-2 border-green-500" : "")">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white text-xl">
+                                    @if (item.IsFood)
+                                    {
+                                        <span>🍽️</span>
+                                    }
+                                    else
+                                    {
+                                        <span>☕</span>
+                                    }
+                                </div>
+                                @if (isAttended)
+                                {
+                                    <div class="flex items-center space-x-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Attended</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="flex items-center space-x-1 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Not Marked</span>
+                                    </div>
+                                }
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">@item.Name</h3>
+                            <p class="text-2xl font-bold text-purple-600 mb-3">Rs @item.Price.ToString("N2")</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                @if (item.IsFood)
+                                {
+                                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">Optional - Billed if attended</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Mandatory - Always billed</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- ✅ Info Message: Users Cannot Mark Attendance -->
+                <div class="mt-6 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                    <span><strong>Note:</strong> Attendance is marked by admin only. You can view your attendance status here.</span>
+                </div>
+            }
+        </div>
+
+        <!-- Billing Summary Cards -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-purple-700 mb-4">Your Billing Summary</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Total Unpaid -->
+                <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-red-100 text-sm font-medium">Total Unpaid</p>
+                        <svg class="w-8 h-8 text-red-200" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <p class="text-4xl font-bold">Rs @ViewBag.TotalUnpaid.ToString("N2")</p>
+                </div>
+
+                <!-- Total Paid -->
+                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-green-100 text-sm font-medium">Total Paid</p>
+                        <svg class="w-8 h-8 text-green-200" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <p class="text-4xl font-bold">Rs @ViewBag.TotalPaid.ToString("N2")</p>
+                </div>
+
+                <!-- Grand Total -->
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-purple-100 text-sm font-medium">Grand Total</p>
+                        <svg class="w-8 h-8 text-purple-200" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <p class="text-4xl font-bold">Rs @ViewBag.GrandTotal.ToString("N2")</p>
+                </div>
+            </div>
+
+            <!-- Monthly Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Current Month -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Current Month</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Total:</span>
+                            <span class="font-semibold text-gray-800">Rs @ViewBag.CurrentMonthTotal.ToString("N2")</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Paid:</span>
+                            <span class="font-semibold text-green-600">Rs @ViewBag.CurrentMonthPaid.ToString("N2")</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Unpaid:</span>
+                            <span class="font-semibold text-red-600">Rs @ViewBag.CurrentMonthUnpaid.ToString("N2")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Previous Month -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Previous Month</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Total:</span>
+                            <span class="font-semibold text-gray-800">Rs @ViewBag.PreviousMonthTotal.ToString("N2")</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Paid:</span>
+                            <span class="font-semibold text-green-600">Rs @ViewBag.PreviousMonthPaid.ToString("N2")</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Unpaid:</span>
+                            <span class="font-semibold text-red-600">Rs @ViewBag.PreviousMonthUnpaid.ToString("N2")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Bills -->
+        <!-- Recent Bills -->
+        @if (recentBills != null && recentBills.Count > 0)
+        {
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-purple-700 mb-4">Recent Bills</h2>
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <table class="min-w-full">
+                        <thead class="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                            <tr>
+                                <th class="px-6 py-3 text-left font-semibold">Date</th>
+                                <th class="px-6 py-3 text-right font-semibold">Amount</th>
+                                <th class="px-6 py-3 text-center font-semibold">Status</th>
+                                <th class="px-6 py-3 text-center font-semibold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bill in recentBills)
+                            {
+                                <tr class="border-b hover:bg-purple-50 transition">
+                                    <td class="px-6 py-4 text-gray-600">@bill.Date.ToString("MMM dd, yyyy")</td>
+                                    <td class="px-6 py-4 text-right font-semibold text-gray-800">Rs @bill.Amount.ToString("N2")</td>
+                                    <td class="px-6 py-4 text-center">
+                                        @if (bill.Paid)
+                                        {
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                                ✓ Paid
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                                ✗ Unpaid
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="flex justify-center space-x-2">
+                                            <a href="@Url.Action("Details", "UserBill", new { id = bill.Id })"
+                                               class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition text-sm flex items-center">
+                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                </svg>
+                                                View
+                                            </a>
+
+                                            @if (!bill.Paid)
+                                            {
+                                                <form method="post" asp-controller="Payment" asp-action="CreateCheckoutSession" asp-route-billId="@bill.Id" class="inline">
+                                                    <button type="submit"
+                                                            class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition text-sm flex items-center">
+                                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                                                            <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" />
+                                                        </svg>
+                                                        Pay Now
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-4 justify-center">
+            <a href="@Url.Action("BillHistory", "UserMenu")"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                </svg>
+                View Full Bill History
+            </a>
+
+            <a href="@Url.Action("AttendanceHistory", "UserMenu")"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                View Attendance History
+            </a>
+
+            <a href="@Url.Action("Logout", "Login")"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                </svg>
+                Logout
+            </a>
+        </div>
+
+    </div>
+
+    <style>
+        @@keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+</body>
+</html>
